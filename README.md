@@ -85,19 +85,7 @@ STORED AS TEXTFILE;
 
 Employee_Partitioned Table,
 ```sql
-CREATE TABLE employees_partitioned (
-    emp_id INT,
-    name STRING,
-    age INT,
-    job_role STRING,
-    salary DOUBLE,
-    project STRING,
-    join_date STRING
-)
-PARTITIONED BY (department STRING)
-ROW FORMAT DELIMITED
-FIELDS TERMINATED BY ','
-STORED AS PARQUET;
+CREATE TABLE employees ( emp_id STRING, name STRING, age INT, job_role STRING, salary DOUBLE, project STRING, join_date STRING )  PARTITIONED BY (department STRING) ROW FORMAT DELIMITED  FIELDS TERMINATED BY ','  STORED AS PARQUET; 
 ```
 
 ### 4. **Loaded the csv file manually in the hive**
@@ -118,15 +106,14 @@ Used ALTER TABLE to add partitions dynamically,
 SET hive.exec.dynamic.partition = true;
 SET hive.exec.dynamic.partition.mode = nonstrict;
 
-INSERT OVERWRITE TABLE employees_partitioned PARTITION(department)
+INSERT INTO TABLE employees PARTITION (department)
 SELECT emp_id, name, age, job_role, salary, project, join_date, department 
 FROM temp_employees;
-```
 
 To verify partitions, run the following command:
 
 ```sql
-SHOW PARTITIONS employees_partitioned;
+SHOW PARTITIONS employees;
 ```
 
 ### 6. **Performed All  Queries**
